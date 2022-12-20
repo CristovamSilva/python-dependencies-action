@@ -3,7 +3,7 @@ name: "Cache Dependencies"
 description: "Setup Python with pip Cache and Install Dependencies"
 
 inputs:
-  app-directory:
+  deps-directory:
     description: What folder to search for requirements
     required: false
     default: "."
@@ -14,6 +14,30 @@ inputs:
     required: false
     default: "3.10"
     type: string
+
+  app:
+    description: Whether to install application dependencies.
+    required: false
+    default: false
+    type: boolean
+
+  qa:
+    description: Whether to install qa dependencies.
+    required: false
+    default: false
+    type: boolean
+
+  sec:
+    description: Whether to install security dependencies.
+    required: false
+    default: false
+    type: boolean
+
+  test:
+    description: Whether to install test dependencies.
+    required: false
+    default: false
+    type: boolean
 
 runs:
   using: "composite"
@@ -31,29 +55,33 @@ runs:
           **/setup.py
 
     - name: Install Application Dependencies
+      if: inputs.app
       run: |
         python -m pip install --upgrade pip setuptools wheel
         if [ -f ./requirements.txt ]; then pip install -r ./requirements.txt; fi
       shell: bash
-      working-directory: ${{ inputs.app-directory }}
+      working-directory: ${{ inputs.deps-directory }}
 
     - name: Install QA Dependencies
+      if: inputs.qa
       run: |
         pip install --upgrade isort black mypy flake8 pylint
         if [ -f ./requirements-qa.txt ]; then pip install -r ./requirements-qa.txt; fi
       shell: bash
-      working-directory: ${{ inputs.app-directory }}
+      working-directory: ${{ inputs.deps-directory }}
 
     - name: Install Security Dependencies
+      if: inputs.sec
       run: |
         pip install --upgrade bandit
         if [ -f ./requirements-sec.txt ]; then pip install -r ./requirements-sec.txt; fi
       shell: bash
-      working-directory: ${{ inputs.app-directory }}
+      working-directory: ${{ inputs.deps-directory }}
 
     - name: Install Test Dependencies
+      if: inputs.test
       run: |
         pip install --upgrade pytest pytest-cov
         if [ -f ./requirements-test.txt ]; then pip install -r ./requirements-test.txt; fi
       shell: bash
-      working-directory: ${{ inputs.app-directory }}
+      working-directory: ${{ inputs.deps-directory }}
