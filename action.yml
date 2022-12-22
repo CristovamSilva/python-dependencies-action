@@ -4,30 +4,30 @@ description: "Setup Python with pip Cache and Install Dependencies"
 
 inputs:
   deps-directory:
-    description: What folder to search for requirements
+    description: Where to search for requirements files.
     required: false
     default: "."
     type: string
 
   python-version:
-    description: What python version to use
+    description: What python version to use.
     required: false
     default: "3.10"
     type: string
 
-  app:
+  application:
     description: Whether to install application dependencies.
     required: false
     default: false
     type: boolean
 
-  qa:
-    description: Whether to install qa dependencies.
+  quality:
+    description: Whether to install quality assurance dependencies.
     required: false
     default: false
     type: boolean
 
-  sec:
+  security:
     description: Whether to install security dependencies.
     required: false
     default: false
@@ -55,7 +55,7 @@ runs:
           **/setup.py
 
     - name: Install Application Dependencies
-      if: inputs.app
+      if: inputs.application
       run: |
         python -m pip install --upgrade pip setuptools wheel
         if [ -f ./requirements.txt ]; then pip install -r ./requirements.txt; fi
@@ -63,7 +63,7 @@ runs:
       working-directory: ${{ inputs.deps-directory }}
 
     - name: Install QA Dependencies
-      if: inputs.qa
+      if: inputs.quality
       run: |
         pip install --upgrade isort black mypy flake8 pylint
         if [ -f ./requirements-qa.txt ]; then pip install -r ./requirements-qa.txt; fi
@@ -71,7 +71,7 @@ runs:
       working-directory: ${{ inputs.deps-directory }}
 
     - name: Install Security Dependencies
-      if: inputs.sec
+      if: inputs.security
       run: |
         pip install --upgrade bandit
         if [ -f ./requirements-sec.txt ]; then pip install -r ./requirements-sec.txt; fi
