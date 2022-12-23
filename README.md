@@ -17,13 +17,15 @@ This action provides the following functionality for GitHub Actions users:
 -   (Optional) Install Test dependencies such as **pytest** and **pytest-cov** and any other present in requirements-test.txt.
 
 ### Basic Usage
-    - name: Setup Cache & Dependencies
-        uses: teialabs/python-dependencies-action@master
-        with:
-            python-version: '3.11'
-            deps-directory: ./requirements  # Where to search for the requirements*.txt files.
-            application: true               # Whether to install application modules.
-            quality: true                   # Whether to install qa dependencies.
-            security: true                  # Whether to install security dependencies.
-            test: true                      # Whether to install test dependencies.
 
+```yaml
+- name: Setup Cache & Dependencies
+    uses: cristovamsilva/python-dependencies-action@master
+    with:
+        python-version: '3.11'
+        deps-directory: ./requirements  # Where to search for the requirements*.txt files.
+        application: true               # Whether to install application modules.
+        quality: true                   # Whether to install qa dependencies.
+        security: true                  # Whether to install security dependencies.
+        test: true                      # Whether to install test dependencies.
+```
