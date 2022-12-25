@@ -48,6 +48,7 @@ runs:
         echo ${{ inputs.quality }}
         echo ${{ inputs.security }}
         echo ${{ inputs.test }}
+      shell: bash
 
     - name: Checkout Repository
       uses: actions/checkout@v3
