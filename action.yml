@@ -44,10 +44,10 @@ runs:
   steps:
     - name: Output Config
       run: |
-        echo ${{ inputs.application }}
-        echo ${{ inputs.quality }}
-        echo ${{ inputs.security }}
-        echo ${{ inputs.test }}
+        echo "Install Application: ${{ inputs.application }}"
+        echo "Install Quality: ${{ inputs.quality }}"
+        echo "Install Security: ${{ inputs.security }}"
+        echo "Install Test: ${{ inputs.test }}"
       shell: bash
 
     - name: Checkout Repository
