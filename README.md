@@ -17,12 +17,11 @@ This action provides the following functionality for GitHub Actions users:
 -   (Optional) Install Test dependencies such as **pytest** and **pytest-cov** and any other present in **requirements-test.txt**.
 
 ### Basic Usage
-
 ```yaml
 -   name: Setup Cache & Dependencies
     uses: cristovamsilva/python-dependencies-action@master
     with:
-        python-version: '3.9'           # Default is 3.10
+        python-version: '3.9'           # Defaults to 3.10
         deps-directory: ./requirements  # Where to search for the requirements*.txt files.
         application: true               # Whether to install application modules.
         quality: true                   # Whether to install qa dependencies.
