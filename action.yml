@@ -3,7 +3,7 @@ name: "Cache Dependencies"
 description: "Setup Python with pip Cache and Install Dependencies"
 
 inputs:
-  deps-directory:
+  dependencies-directory:
     description: Where to search for requirements files.
     required: false
     default: "."
@@ -68,7 +68,7 @@ runs:
         python -m pip install --upgrade pip setuptools wheel
         if [ -f ./requirements.txt ]; then pip install -r ./requirements.txt; fi
       shell: bash
-      working-directory: ${{ inputs.deps-directory }}
+      working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install QA Dependencies
       if: inputs.quality  == 'true'
@@ -76,7 +76,7 @@ runs:
         pip install --upgrade isort black mypy flake8 pylint
         if [ -f ./requirements-qa.txt ]; then pip install -r ./requirements-qa.txt; fi
       shell: bash
-      working-directory: ${{ inputs.deps-directory }}
+      working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Security Dependencies
       if: inputs.security  == 'true'
@@ -84,7 +84,7 @@ runs:
         pip install --upgrade bandit
         if [ -f ./requirements-sec.txt ]; then pip install -r ./requirements-sec.txt; fi
       shell: bash
-      working-directory: ${{ inputs.deps-directory }}
+      working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Test Dependencies
       if: inputs.test  == 'true'
@@ -92,4 +92,4 @@ runs:
         pip install --upgrade pytest pytest-cov
         if [ -f ./requirements-test.txt ]; then pip install -r ./requirements-test.txt; fi
       shell: bash
-      working-directory: ${{ inputs.deps-directory }}
+      working-directory: ${{ inputs.dependencies-directory }}

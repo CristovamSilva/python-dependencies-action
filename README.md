@@ -22,7 +22,7 @@ This action provides the following functionality for GitHub Actions users:
     uses: cristovamsilva/python-dependencies-action@master
     with:
         python-version: '3.9'           # Defaults to 3.10
-        deps-directory: ./requirements  # Where to search for the requirements*.txt files.
+        dependencies-directory: ./requirements  # Where to search for the requirements*.txt files.
         application: true               # Whether to install application modules.
         quality: true                   # Whether to install qa dependencies.
         security: true                  # Whether to install security dependencies.
