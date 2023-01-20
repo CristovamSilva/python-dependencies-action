@@ -71,6 +71,10 @@ inputs:
 
 runs:
   using: "composite"
+  defaults:
+    shell: bash
+    working-directory: ${{ inputs.dependencies-directory }}
+
   steps:
     - name: Output Config
       run: |
