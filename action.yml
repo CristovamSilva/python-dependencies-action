@@ -112,7 +112,7 @@ runs:
         else
             pip install ${{ inputs.application-packages }}
         fi
-        if [ --f ./requirements.txt ]; then
+        if [ -f ./requirements.txt ]; then
             echo "No application packages requirements file"
         else
             pip install -r ./requirements.txt
@@ -128,7 +128,7 @@ runs:
         else
             pip install ${{ inputs.quality-packages }}
         fi
-        if [ --f ./requirements-quality.txt ]; then
+        if [ -f ./requirements-quality.txt ]; then
             echo "No quality packages requirements file"
         else
             pip install -r ./requirements-quality.txt
@@ -144,7 +144,7 @@ runs:
         else
             pip install ${{ inputs.security-packages }}
         fi
-        if [ --f ./requirements-security.txt ]; then
+        if [ -f ./requirements-security.txt ]; then
             echo "No security packages requirements file"
         else
             pip install -r ./requirements-security.txt
@@ -160,7 +160,7 @@ runs:
         else
             pip install ${{ inputs.test-packages }}
         fi
-        if [ --f ./requirements-test.txt ]; then
+        if [ -f ./requirements-test.txt ]; then
             echo "No test packages requirements file"
         else
             pip install -r ./requirements-test.txt
