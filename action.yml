@@ -71,11 +71,11 @@ inputs:
 
 runs:
   using: "composite"
+  steps:
   defaults:
     shell: bash
     working-directory: ${{ inputs.dependencies-directory }}
 
-  steps:
     - name: Output Config
       run: |
         echo "Install Application: ${{ inputs.application }}"
