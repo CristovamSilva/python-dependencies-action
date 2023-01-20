@@ -112,30 +112,58 @@ runs:
         else
             pip install ${{ inputs.application-packages }}
         fi
-        if [ -f ./requirements.txt ]; then pip install -r ./requirements.txt; fi
+        if [ --f ./requirements.txt ]; then
+            echo "No application packages requirements file"
+        else
+            pip install -r ./requirements.txt
+        fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install QA Dependencies
       if: inputs.quality  == 'true'
       run: |
-        pip install --upgrade ${{ inputs.quality-packages }}
-        if [ -f ./requirements-qa.txt ]; then pip install -r ./requirements-qa.txt; fi
+        if [ -z "${{ inputs.quality-packages }}" ]; then
+            echo "No quality packages to install"
+        else
+            pip install ${{ inputs.quality-packages }}
+        fi
+        if [ --f ./requirements-quality.txt ]; then
+            echo "No quality packages requirements file"
+        else
+            pip install -r ./requirements-quality.txt
+        fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Security Dependencies
       if: inputs.security  == 'true'
       run: |
-        pip install --upgrade ${{ inputs.security-packages }}
-        if [ -f ./requirements-sec.txt ]; then pip install -r ./requirements-sec.txt; fi
+        if [ -z "${{ inputs.security-packages }}" ]; then
+            echo "No security packages to install"
+        else
+            pip install ${{ inputs.security-packages }}
+        fi
+        if [ --f ./requirements-security.txt ]; then
+            echo "No security packages requirements file"
+        else
+            pip install -r ./requirements-security.txt
+        fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Test Dependencies
       if: inputs.test  == 'true'
       run: |
-        pip install --upgrade ${{ inputs.test-packages }}
-        if [ -f ./requirements-test.txt ]; then pip install -r ./requirements-test.txt; fi
+        if [ -z "${{ inputs.test-packages }}" ]; then
+            echo "No test packages to install"
+        else
+            pip install ${{ inputs.test-packages }}
+        fi
+        if [ --f ./requirements-test.txt ]; then
+            echo "No test packages requirements file"
+        else
+            pip install -r ./requirements-test.txt
+        fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
