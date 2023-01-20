@@ -9,6 +9,12 @@ inputs:
     default: "."
     type: string
 
+  deploy-keys:
+    description: Packages deploy keys.
+    required: false
+    default: ""
+    type: string
+
   python-version:
     description: What python version to use.
     required: false
@@ -21,11 +27,23 @@ inputs:
     default: false
     type: boolean
 
+  application-packages:
+    description: Additional packages to install with pip.
+    required: false
+    default: ""
+    type: string
+
   quality:
     description: Whether to install quality assurance dependencies.
     required: false
     default: false
     type: boolean
+
+  quality-packages:
+    description: Additional packages to install with pip.
+    required: false
+    default: ""
+    type: string
 
   security:
     description: Whether to install security dependencies.
@@ -33,11 +51,23 @@ inputs:
     default: false
     type: boolean
 
+  security-packages:
+    description: Additional packages to install with pip.
+    required: false
+    default: ""
+    type: string
+
   test:
     description: Whether to install test dependencies.
     required: false
     default: false
     type: boolean
+
+  test-packages:
+    description: Additional packages to install with pip.
+    required: false
+    default: ""
+    type: string
 
 runs:
   using: "composite"
@@ -53,6 +83,11 @@ runs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
+    - name: Setup Deploy Keys
+      uses: CristovamSilva/ssh-agent-action@master
+      with:
+        ssh-private-key: ${{ inputs.deploy-keys }}
+
     - name: Setup Python and Pip Cache
       uses: actions/setup-python@v4
       with:
@@ -61,11 +96,13 @@ runs:
         cache-dependency-path: |
           **/requirements*.txt
           **/setup.py
+          **/pyproject.toml
+          **/setup.cfg
 
     - name: Install Application Dependencies
       if: inputs.application == 'true'
       run: |
-        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install --upgrade pip setuptools wheel ${{ inputs.application-packages }}
         if [ -f ./requirements.txt ]; then pip install -r ./requirements.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -73,7 +110,7 @@ runs:
     - name: Install QA Dependencies
       if: inputs.quality  == 'true'
       run: |
-        pip install --upgrade isort black mypy flake8 pylint
+        pip install --upgrade isort black mypy flake8 pylint ${{ inputs.quality-packages }}
         if [ -f ./requirements-qa.txt ]; then pip install -r ./requirements-qa.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -81,7 +118,7 @@ runs:
     - name: Install Security Dependencies
       if: inputs.security  == 'true'
       run: |
-        pip install --upgrade bandit
+        pip install --upgrade bandit ${{ inputs.security-packages }}
         if [ -f ./requirements-sec.txt ]; then pip install -r ./requirements-sec.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -89,7 +126,7 @@ runs:
     - name: Install Test Dependencies
       if: inputs.test  == 'true'
       run: |
-        pip install --upgrade pytest pytest-cov
+        pip install --upgrade pytest pytest-cov ${{ inputs.test-packages }}
         if [ -f ./requirements-test.txt ]; then pip install -r ./requirements-test.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
