@@ -113,9 +113,9 @@ runs:
             pip install ${{ inputs.application-packages }}
         fi
         if [ -f ./requirements.txt ]; then
-            echo "No application packages requirements file"
-        else
             pip install -r ./requirements.txt
+        else
+            echo "No application packages requirements file"
         fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -129,9 +129,9 @@ runs:
             pip install ${{ inputs.quality-packages }}
         fi
         if [ -f ./requirements-quality.txt ]; then
-            echo "No quality packages requirements file"
-        else
             pip install -r ./requirements-quality.txt
+        else
+            echo "No quality packages requirements file"
         fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -145,9 +145,9 @@ runs:
             pip install ${{ inputs.security-packages }}
         fi
         if [ -f ./requirements-security.txt ]; then
-            echo "No security packages requirements file"
-        else
             pip install -r ./requirements-security.txt
+        else
+            echo "No security packages requirements file"
         fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -161,9 +161,9 @@ runs:
             pip install ${{ inputs.test-packages }}
         fi
         if [ -f ./requirements-test.txt ]; then
-            echo "No test packages requirements file"
-        else
             pip install -r ./requirements-test.txt
+        else
+            echo "No test packages requirements file"
         fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
