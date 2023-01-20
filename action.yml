@@ -28,7 +28,7 @@ inputs:
     type: boolean
 
   application-packages:
-    description: Additional packages to install with pip.
+    description: Project packages to install with pip.
     required: false
     default: ""
     type: string
@@ -40,9 +40,9 @@ inputs:
     type: boolean
 
   quality-packages:
-    description: Additional packages to install with pip.
+    description: Override packages to install with pip.
     required: false
-    default: ""
+    default: "isort black mypy flake8 pylint"
     type: string
 
   security:
@@ -52,9 +52,9 @@ inputs:
     type: boolean
 
   security-packages:
-    description: Additional packages to install with pip.
+    description: Override packages to install with pip.
     required: false
-    default: ""
+    default: "bandit"
     type: string
 
   test:
@@ -64,9 +64,9 @@ inputs:
     type: boolean
 
   test-packages:
-    description: Additional packages to install with pip.
+    description: Override packages to install with pip.
     required: false
-    default: ""
+    default: "pytest pytest-cov requests"
     type: string
 
 runs:
@@ -99,10 +99,17 @@ runs:
           **/pyproject.toml
           **/setup.cfg
 
+    - name: Install Python Dependencies
+      run: python -m pip install --upgrade pip pipenv setuptools wheel
+
     - name: Install Application Dependencies
       if: inputs.application == 'true'
       run: |
-        python -m pip install --upgrade pip setuptools wheel ${{ inputs.application-packages }}
+        if [ -z "${{ inputs.application-packages }}" ]; then
+            echo "No application packages to install"
+        else
+            pip install ${{ inputs.application-packages }}
+        fi
         if [ -f ./requirements.txt ]; then pip install -r ./requirements.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -110,7 +117,7 @@ runs:
     - name: Install QA Dependencies
       if: inputs.quality  == 'true'
       run: |
-        pip install --upgrade isort black mypy flake8 pylint ${{ inputs.quality-packages }}
+        pip install --upgrade ${{ inputs.quality-packages }}
         if [ -f ./requirements-qa.txt ]; then pip install -r ./requirements-qa.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -118,7 +125,7 @@ runs:
     - name: Install Security Dependencies
       if: inputs.security  == 'true'
       run: |
-        pip install --upgrade bandit ${{ inputs.security-packages }}
+        pip install --upgrade ${{ inputs.security-packages }}
         if [ -f ./requirements-sec.txt ]; then pip install -r ./requirements-sec.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
@@ -126,7 +133,7 @@ runs:
     - name: Install Test Dependencies
       if: inputs.test  == 'true'
       run: |
-        pip install --upgrade pytest pytest-cov ${{ inputs.test-packages }}
+        pip install --upgrade ${{ inputs.test-packages }}
         if [ -f ./requirements-test.txt ]; then pip install -r ./requirements-test.txt; fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
