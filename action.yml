@@ -86,7 +86,8 @@ runs:
     - name: Setup Deploy Keys
       uses: CristovamSilva/ssh-agent-action@master
       with:
-        ssh-private-key: ${{ inputs.deploy-keys }}
+        ssh-private-key: |
+          ${{ inputs.deploy-keys }}
 
     - name: Setup Python and Pip Cache
       uses: actions/setup-python@v4
