@@ -31,10 +31,16 @@ inputs:
     type: boolean
 
   application-packages:
-    description: Project packages to install with pip.
+    description: Packages to install with pip.
     required: false
     default: ""
     type: string
+
+  application-requirements-file:
+    description: Packages to install with pip.
+    required: false
+    default: "requirements.txt"
+    type: file
 
   quality:
     description: Whether to install quality assurance dependencies.
@@ -48,6 +54,12 @@ inputs:
     default: "isort black mypy flake8 pylint"
     type: string
 
+  quality-requirements-file:
+    description: Packages to install with pip.
+    required: false
+    default: "requirements-quality.txt"
+    type: file
+
   security:
     description: Whether to install security dependencies.
     required: false
@@ -59,6 +71,12 @@ inputs:
     required: false
     default: "bandit"
     type: string
+
+  security-requirements-file:
+    description: Packages to install with pip.
+    required: false
+    default: "requirements-security.txt"
+    type: file
 
   test:
     description: Whether to install test dependencies.
@@ -72,15 +90,30 @@ inputs:
     default: "pytest pytest-cov requests"
     type: string
 
+  test-requirements-file:
+    description: Packages to install with pip.
+    required: false
+    default: "requirements-test.txt"
+    type: file
+
 runs:
   using: "composite"
   steps:
     - name: Output Config
       run: |
         echo "Install Application: ${{ inputs.application }}"
+        echo "Application Packages: ${{ inputs.application-packages }}"
+        echo "Application File: ${{ inputs.application-requirements-file }}"
         echo "Install Quality: ${{ inputs.quality }}"
+        echo "Quality Packages: ${{ inputs.quality-packages }}"
+        echo "Quality File: ${{ inputs.quality-requirements-file }}"
         echo "Install Security: ${{ inputs.security }}"
+        echo "Security Packages: ${{ inputs.security-packages }}"
+        echo "Security File: ${{ inputs.security-requirements-file }}"
         echo "Install Test: ${{ inputs.test }}"
+        echo "Test Packages: ${{ inputs.test-packages }}"
+        echo "Test File: ${{ inputs.test-requirements-file }}"
+
       shell: bash
 
     - name: Checkout Repository
@@ -112,28 +145,28 @@ runs:
       if: inputs.application
       run: |
         if [ -z "${{ inputs.application-packages }}" ]; then
-            echo "No application packages to install"
+            echo "No application packages to install."
         else
             pip install ${{ inputs.application-packages }}
         fi
-        if [ -f ./requirements.txt ]; then
-            pip install -r ./requirements.txt
+        if [ -f "${{ inputs.application-requirements-file }}" ]; then
+            pip install -r ./${{ inputs.application-requirements-file }}
         else
-            echo "No application packages requirements file"
+            echo "No application packages requirements file."
         fi
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install QA Dependencies
-      if: inputs.quality  == 'true'
+      if: inputs.quality
       run: |
         if [ -z "${{ inputs.quality-packages }}" ]; then
             echo "No quality packages to install"
         else
             pip install ${{ inputs.quality-packages }}
         fi
-        if [ -f ./requirements-quality.txt ]; then
-            pip install -r ./requirements-quality.txt
+        if [ -f ${{ inputs.quality-requirements-file }} ]; then
+            pip install -r ${{ inputs.quality-requirements-file }}
         else
             echo "No quality packages requirements file"
         fi
@@ -141,15 +174,15 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Security Dependencies
-      if: inputs.security  == 'true'
+      if: inputs.security
       run: |
         if [ -z "${{ inputs.security-packages }}" ]; then
             echo "No security packages to install"
         else
             pip install ${{ inputs.security-packages }}
         fi
-        if [ -f ./requirements-security.txt ]; then
-            pip install -r ./requirements-security.txt
+        if [ -f "${{ inputs.security-requirements-file }}" ]; then
+            pip install -r ./${{ inputs.security-requirements-file }}
         else
             echo "No security packages requirements file"
         fi
@@ -157,15 +190,15 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Test Dependencies
-      if: inputs.test  == 'true'
+      if: inputs.test
       run: |
         if [ -z "${{ inputs.test-packages }}" ]; then
             echo "No test packages to install"
         else
             pip install ${{ inputs.test-packages }}
         fi
-        if [ -f ./requirements-test.txt ]; then
-            pip install -r ./requirements-test.txt
+        if [ -f "${{ inputs.test-requirements-file }}" ]; then
+            pip install -r ./${{ inputs.test-requirements-file }}
         else
             echo "No test packages requirements file"
         fi
