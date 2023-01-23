@@ -100,6 +100,7 @@ runs:
   using: "composite"
   steps:
     - name: Output Config
+      shell: bash
       run: |
         echo "Install Application: ${{ inputs.application }}"
         echo "Application Packages: ${{ inputs.application-packages }}"
@@ -113,8 +114,6 @@ runs:
         echo "Install Test: ${{ inputs.test }}"
         echo "Test Packages: ${{ inputs.test-packages }}"
         echo "Test File: ${{ inputs.test-requirements-file }}"
-
-      shell: bash
 
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -190,6 +189,8 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Test Dependencies
+      shell: bash
+      working-directory: ${{ inputs.dependencies-directory }}
       if: inputs.test
       run: |
         if [ -z "${{ inputs.test-packages }}" ]; then
@@ -202,5 +203,3 @@ runs:
         else
             echo "No test packages requirements file"
         fi
-      shell: bash
-      working-directory: ${{ inputs.dependencies-directory }}
