@@ -24,8 +24,8 @@ inputs:
       rule: enum
       enum: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
-  application-obj:
-    description: Whether to install application packages.
+  application:
+    description: Application packages options.
     required: false
     type: object
     schema:
@@ -33,60 +33,69 @@ inputs:
       properties:
         install:
           type: "boolean"
-          description: " Whether to install application packages."
+          description: " Whether to install packages."
           default: false
         packages:
           type: "string"
-          description: "Project packages to install with pip."
+          description: "Packages to install with pip."
           default: ""
-
-  application:
-    description: Whether to install application packages.
-    required: false
-    default: false
-    type: boolean
-
-  application-packages:
-    description: Project packages to install with pip.
-    required: false
-    default: ""
-    type: string
+        file:
+          type: "file"
+          description: "Requirements file to install with pip."
+          required: false
+          default: "requirements.txt"
 
   quality:
-    description: Whether to install quality assurance dependencies.
+    description: Quality packages options.
     required: false
-    default: false
-    type: boolean
-
-  quality-packages:
-    description: Override packages to install with pip.
-    required: false
-    default: "isort black mypy flake8 pylint"
-    type: string
+    type: object
+    schema:
+      type: "object"
+      properties:
+        install:
+          type: "boolean"
+          description: " Whether to install packages."
+          default: false
+        packages:
+          type: "string"
+          description: "Packages to install with pip."
+          default: "isort black mypy flake8 pylint"
+        file:
+          type: "file"
+          description: "Requirements file to install with pip."
+          default: "requirements-quality.txt"
 
   security:
-    description: Whether to install security dependencies.
+    description: Security packages options.
     required: false
-    default: false
-    type: boolean
-
-  security-packages:
-    description: Override packages to install with pip.
-    required: false
-    default: "bandit"
-    type: string
+    type: object
+    schema:
+      type: "object"
+      properties:
+        install:
+          type: "boolean"
+          description: " Whether to install packages."
+          default: false
+        packages:
+          type: "string"
+          description: "Packages to install with pip."
+          default: "bandit"
 
   test:
-    description: Whether to install test dependencies.
+    description: Test packages options.
     required: false
-    default: false
-    type: boolean
-
-  test-packages:
-    description: Override packages to install with pip.
-    required: false
-    default: "pytest pytest-cov requests"
-    type: string
+    type: object
+    schema:
+      type: "object"
+      properties:
+        install:
+          type: "boolean"
+          description: " Whether to install packages."
+          default: false
+        packages:
+          type: "string"
+          description: "Packages to install with pip."
+          default: "pytest pytest-cov requests"
 
 runs:
   using: "composite"
@@ -125,15 +134,15 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Application Dependencies
-      if: fromJson(inputs.application-obj).install
+      if: fromJson(inputs.application).install
       run: |
-        if [ -z "${{ fromJson(inputs.application-obj).packages }}" ]; then
+        if [ -z "${{ fromJson(inputs.application).packages }}" ]; then
             echo "No application packages to install"
         else
-            pip install ${{ fromJson(inputs.application-obj).packages }}
+            pip install ${{ fromJson(inputs.application).packages }}
         fi
-        if [ -f ./requirements.txt ]; then
-            pip install -r ./requirements.txt
+        if [ -f "${{ fromJson(inputs.application).file }}" ]; then
+            pip install -r ./${{ fromJson(inputs.application).file }}
         else
             echo "No application packages requirements file"
         fi
@@ -141,15 +150,15 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install QA Dependencies
-      if: inputs.quality  == 'true'
+      if: fromJson(inputs.quality).install
       run: |
-        if [ -z "${{ inputs.quality-packages }}" ]; then
+        if [ -z "${{ fromJson(inputs.quality).packages }}" ]; then
             echo "No quality packages to install"
         else
-            pip install ${{ inputs.quality-packages }}
+            pip install ${{ fromJson(inputs.quality).packages }}
         fi
-        if [ -f ./requirements-quality.txt ]; then
-            pip install -r ./requirements-quality.txt
+        if [ -f "${{ fromJson(inputs.application).file }}" ]; then
+            pip install -r ./${{ fromJson(inputs.application).file }}
         else
             echo "No quality packages requirements file"
         fi
