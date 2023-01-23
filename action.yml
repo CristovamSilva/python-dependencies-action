@@ -145,7 +145,7 @@ runs:
     - name: Install Application Dependencies
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
-      if: inputs.application
+      if: inputs.application == 'true' == 'true'
       run: |
         if [ -z "${{ inputs.application-packages }}" ]; then
             echo "No application packages to install."
@@ -158,10 +158,10 @@ runs:
             echo "No application packages requirements file."
         fi
 
-    - name: Install QA Dependencies
+    - name: Install Quality Assurance Dependencies
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
-      if: inputs.quality
+      if: inputs.quality == 'true'
       run: |
         if [ -z "${{ inputs.quality-packages }}" ]; then
             echo "No quality packages to install"
@@ -177,7 +177,7 @@ runs:
     - name: Install Security Dependencies
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
-      if: inputs.security
+      if: inputs.security == 'true'
       run: |
         if [ -z "${{ inputs.security-packages }}" ]; then
             echo "No security packages to install"
@@ -193,7 +193,7 @@ runs:
     - name: Install Test Dependencies
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
-      if: inputs.test
+      if: inputs.test == 'true'
       run: |
         if [ -z "${{ inputs.test-packages }}" ]; then
             echo "No test packages to install"
