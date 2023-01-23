@@ -21,8 +21,24 @@ inputs:
     default: "3.10"
     type: string
     validation:
-      rule: emum
+      rule: enum
       enum: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
+  application-obj:
+    description: Whether to install application packages.
+    required: false
+    type: object
+    schema:
+      type: "object"
+      properties:
+        install:
+          type: "boolean"
+          description: " Whether to install application packages."
+          default: false
+        packages:
+          type: "string"
+          description: "Project packages to install with pip."
+          default: ""
 
   application:
     description: Whether to install application packages.
@@ -109,12 +125,12 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Application Dependencies
-      if: inputs.application == 'true'
+      if: inputs.application-obj.install == 'true'
       run: |
-        if [ -z "${{ inputs.application-packages }}" ]; then
+        if [ -z "${{ inputs.application-obj.packages }}" ]; then
             echo "No application packages to install"
         else
-            pip install ${{ inputs.application-packages }}
+            pip install ${{ inputs.application-obj.packages }}
         fi
         if [ -f ./requirements.txt ]; then
             pip install -r ./requirements.txt
