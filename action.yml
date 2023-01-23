@@ -125,12 +125,12 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Application Dependencies
-      # if: inputs.application-obj.install
+      if: fromJson(inputs.application-obj).install
       run: |
         if [ -z "${{ fromJson(inputs.application-obj).packages }}" ]; then
             echo "No application packages to install"
         else
-            pip install ${{ inputs.application-obj.packages }}
+            pip install ${{ fromJson(inputs.application-obj).packages }}
         fi
         if [ -f ./requirements.txt ]; then
             pip install -r ./requirements.txt
