@@ -127,7 +127,7 @@ runs:
     - name: Install Application Dependencies
       # if: inputs.application-obj.install
       run: |
-        if [ -z "${{ inputs.application-obj.packages }}" ]; then
+        if [ -z "${{ fromJson(inputs.application-obj).packages }}" ]; then
             echo "No application packages to install"
         else
             pip install ${{ inputs.application-obj.packages }}
