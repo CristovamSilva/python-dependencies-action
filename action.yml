@@ -125,7 +125,7 @@ runs:
       working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Application Dependencies
-      if: inputs.application-obj.install == 'true'
+      if: inputs.application-obj.install
       run: |
         if [ -z "${{ inputs.application-obj.packages }}" ]; then
             echo "No application packages to install"
