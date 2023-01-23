@@ -8,6 +8,8 @@ inputs:
     required: false
     default: "."
     type: directory
+    validation:
+      rule: directoryExists
 
   deploy-keys:
     description: Packages deploy keys.
@@ -136,11 +138,13 @@ runs:
           **/setup.cfg
 
     - name: Install Python Dependencies
-      run: python -m pip install --upgrade pip pipenv setuptools wheel
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
+      run: python -m pip install --upgrade pip pipenv setuptools wheel
 
     - name: Install Application Dependencies
+      shell: bash
+      working-directory: ${{ inputs.dependencies-directory }}
       if: inputs.application
       run: |
         if [ -z "${{ inputs.application-packages }}" ]; then
@@ -153,10 +157,10 @@ runs:
         else
             echo "No application packages requirements file."
         fi
-      shell: bash
-      working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install QA Dependencies
+      shell: bash
+      working-directory: ${{ inputs.dependencies-directory }}
       if: inputs.quality
       run: |
         if [ -z "${{ inputs.quality-packages }}" ]; then
@@ -169,10 +173,10 @@ runs:
         else
             echo "No quality packages requirements file"
         fi
-      shell: bash
-      working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Security Dependencies
+      shell: bash
+      working-directory: ${{ inputs.dependencies-directory }}
       if: inputs.security
       run: |
         if [ -z "${{ inputs.security-packages }}" ]; then
@@ -185,8 +189,6 @@ runs:
         else
             echo "No security packages requirements file"
         fi
-      shell: bash
-      working-directory: ${{ inputs.dependencies-directory }}
 
     - name: Install Test Dependencies
       shell: bash
