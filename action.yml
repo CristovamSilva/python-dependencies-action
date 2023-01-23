@@ -7,7 +7,7 @@ inputs:
     description: Where to search for requirements files.
     required: false
     default: "."
-    type: string
+    type: directory
 
   deploy-keys:
     description: Packages deploy keys.
@@ -20,9 +20,12 @@ inputs:
     required: false
     default: "3.10"
     type: string
+    validation:
+      rule: emum
+      enum: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
   application:
-    description: Whether to install application dependencies.
+    description: Whether to install application packages.
     required: false
     default: false
     type: boolean
