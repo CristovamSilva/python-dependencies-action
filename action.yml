@@ -145,7 +145,7 @@ runs:
     - name: Install Application Dependencies
       shell: bash
       working-directory: ${{ inputs.dependencies-directory }}
-      if: inputs.application == 'true' == 'true'
+      if: inputs.application == 'true'
       run: |
         if [ -z "${{ inputs.application-packages }}" ]; then
             echo "No application packages to install."
