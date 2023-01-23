@@ -93,7 +93,7 @@ runs:
   steps:
     - name: Output Config
       run: |
-        echo "Install Application: ${{ toJson(inputs.application-obj) }}"
+        echo "Install Application: ${{ inputs.application-obj }}"
         echo "Install Quality: ${{ inputs.quality }}"
         echo "Install Security: ${{ inputs.security }}"
         echo "Install Test: ${{ inputs.test }}"
